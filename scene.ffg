@@ -1,4 +1,4 @@
-let neuron = https://raw.githubusercontent.com/imalsogreg/reuron/main/data/sample_neuron.ffg in
+let neuron = https://raw.githubusercontent.com/reuron/reuron-lib/main/sample_neuron.ffg in
 let stimulator =
   Neuron/stimulator {
     envelope: {
