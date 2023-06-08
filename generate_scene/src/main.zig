@@ -1,6 +1,6 @@
 const std = @import("std");
 const base_uri = std.Uri.parse("http://api.brain-map.org/") catch unreachable;
-const api_uri = std.Uri.parse("http://api.brain-map.org/") catch unreachable;
+const api_uri = "http://api.brain-map.org/api/v2/data/";
 
 pub fn PageOf(comptime T: type) type {
     return struct {
@@ -12,14 +12,14 @@ pub fn PageOf(comptime T: type) type {
 
 const SpecimenId = struct { specimen__id: u64 };
 
-const Specimen = struct {
+const Reconstruction = struct {
     id: u64,
     well_known_files: []WellKnownFile,
 };
 
 const WellKnownFile = struct {
     id: u64,
-    well_known_file_type: u64,
+    well_known_file_type_id: u64,
     path: []const u8,
 };
 
@@ -41,11 +41,15 @@ pub fn fetch_specimens(
 
 }
 
-pub fn fetch_specimen(
+/// Fetch reconstructions for specimen id.
+pub fn fetch_reconstructions(
     allocator: std.mem.Allocator,
     client: *std.http.Client,
     specimen_id: u64
-) !PageOf(Specimen) {
+) !PageOf(Reconstruction) {
+
+    std.debug.print("Working on specimen {}\n", .{specimen_id});
+
     const uri = try std.fmt.allocPrint(
         allocator,
         "{s}query.json?criteria=model::NeuronReconstruction,rma::criteria,[specimen_id$eq{}],rma::include,well_known_files",
@@ -57,8 +61,20 @@ pub fn fetch_specimen(
     try req.wait();
     const body = try req.reader().readAllAlloc(allocator, 2000000);
 
-    const specimen = try std.json.parseFromSlice(PageOf(Specimen), allocator, body, .{ .ignore_unknown_fields = true });
-    return specimen;
+    const reconstructions = std.json.parseFromSlice(PageOf(Reconstruction), allocator, body, .{ .ignore_unknown_fields = true });
+    std.debug.print("Fetched reconstructions for specimen {}", .{specimen_id});
+    return reconstructions;
+
+}
+
+// For the given reconstructions, find the first that has a well-known-file
+// with our desired type. Create a file for the neuron, and return the file's path.
+pub fn handle_reconstructions(
+    allocator: std.mem.Allocator,
+    client: *std.http.Client,
+    specimen_id: u64,
+    PageOf(Reconstruction)
+) ! {
 
 }
 
@@ -71,16 +87,17 @@ pub fn main() !void {
 
     const specimen_ids = try fetch_specimens(allocator, &client);
     std.debug.print("spicimen count: {}\n", .{specimen_ids.msg.len});
-    for (specimen_ids.msg) |msg| {
-        std.debug.print("specimen_id: {}\n", .{msg.specimen__id});
-    }
 
     for (specimen_ids.msg) |msg| {
-        const specimens = try fetch_specimen(allocator, &client, msg.specimen__id);
-        for (specimens.msg) |s| {
-            std.debug.print("id: {}\nn_files: {}\n\n", .{ s.id, s.well_known_files.len });
+        if (fetch_reconstructions(allocator, &client, msg.specimen__id)) |reconstructions| {
+            for (reconstructions.msg) |r| {
+                std.debug.print("id: {}\nn_files: {}\n\n", .{ r.id, r.well_known_files.len });
+            }
+
+            defer std.json.parseFree(PageOf(Reconstruction), allocator, reconstructions);
+        } else |err| {
+            std.debug.print("ERROR: {}\n", .{err});
         }
-        defer std.json.parseFree(PageOf(Specimen), allocator, specimens);
     }
 
     defer std.json.parseFree(PageOf(SpecimenId), allocator, specimen_ids);
