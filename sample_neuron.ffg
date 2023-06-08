@@ -1,4 +1,4 @@
-let defaultSwcNeuron =   https://raw.githubusercontent.com/reuron/reuron-lib/main/defaultSwcNeuron.ffg in
+let defaultSwcNeuron = ./defaultSwcNeuron.ffg in
  defaultSwcNeuron [   {id: 1, x: 220.3916, y: 401.5223, z: 32.1182, r: 5.1554, type: 1, parent: -1},
   {id: 2, x: 224.6175, y: 398.5044, z: 31.953, r: 0.9781, type: 3, parent: 1},
   {id: 3, x: 225.5808, y: 397.9221, z: 31.9561, r: 0.9424, type: 3, parent: 2},
