@@ -1,5 +1,4 @@
 const std = @import("std");
-const base_uri = std.Uri.parse("http://api.brain-map.org/") catch unreachable;
 const api_uri = "http://api.brain-map.org/api/v2/data/";
 
 pub fn PageOf(comptime T: type) type {
@@ -21,6 +20,7 @@ const WellKnownFile = struct {
     id: u64,
     well_known_file_type_id: u64,
     path: []const u8,
+    download_link: []const u8,
 };
 
 // Retrieve list of specimens from the Allen API.
@@ -69,14 +69,53 @@ pub fn fetch_reconstructions(
 
 // For the given reconstructions, find the first that has a well-known-file
 // with our desired type. Create a file for the neuron, and return the file's path.
+//  - The neuron file is determined by calling reuron-io's convert_swc endpoint.
 pub fn handle_reconstructions(
     allocator: std.mem.Allocator,
-    client: *std.http.Client,
+    // client: *std.http.Client,
     specimen_id: u64,
-    PageOf(Reconstruction)
-) ! {
+    reconstructions: PageOf(Reconstruction)
+) ![]const u8 {
 
+    const base_uri = "http://api.brain-map.org";
+
+    const target_type : u64 = 303941301;
+    var download_link: []const u8 = "";
+    var found_file = false;
+    var reconstruction_id: u64 = 0;
+    for (reconstructions.msg) |reconstruction| blk: {
+        for (reconstruction.well_known_files) |well_known_file| {
+            if (well_known_file.well_known_file_type_id == target_type) {
+                found_file = true;
+                download_link = well_known_file.download_link;
+                reconstruction_id = reconstruction.id;
+                break :blk;
+            }
+        }
+    }
+
+    if (!found_file) {
+        return "";
+    }
+
+    const swc_remote_path = try std.fmt.allocPrint(
+        allocator,
+        "{s}{s}",
+        .{base_uri, download_link}
+    );
+
+    const ffg_path = try std.fmt.allocPrint(
+        allocator,
+        "./neurons/{}_{}.ffg",
+        .{specimen_id, reconstruction_id}
+    );
+
+    std.debug.print("Path hit: {s}\n", .{swc_remote_path});
+    std.debug.print("ffg path: {s}\n", .{ffg_path});
+
+    return download_link;
 }
+
 
 pub fn main() !void {
 
@@ -93,6 +132,9 @@ pub fn main() !void {
             for (reconstructions.msg) |r| {
                 std.debug.print("id: {}\nn_files: {}\n\n", .{ r.id, r.well_known_files.len });
             }
+            const file = try handle_reconstructions(allocator, msg.specimen__id, reconstructions);
+
+            std.debug.print("handle_reconstruction result: {s}", .{file});
 
             defer std.json.parseFree(PageOf(Reconstruction), allocator, reconstructions);
         } else |err| {
