@@ -17,9 +17,6 @@ Neuron/scene {
     [{neuron: ./neurons/allen_526633593_526725807.ffg
 , stimulator_segments:
       [{segment: 100, stimulator: stimulator}]
-     },
-     {neuron: neuron, stimulator_segments:
-      [{segment: 100, stimulator: stimulator}]
      }
     ]
 }
