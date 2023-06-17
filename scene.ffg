@@ -14,10 +14,11 @@ let stimulator =
 
 Neuron/scene {
   neurons:
-    [{neuron: neuron, stimulator_segments:
+    [{neuron: ./neurons/allen_526633593_526725807.ffg
+, stimulator_segments:
       [{segment: 100, stimulator: stimulator}]
      },
-     {neuron: ./neurons/allen_526633593_526725807.ffg, stimulator_segments:
+     {neuron: neuron, stimulator_segments:
       [{segment: 100, stimulator: stimulator}]
      }
     ]
