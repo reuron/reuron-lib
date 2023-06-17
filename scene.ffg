@@ -16,5 +16,9 @@ Neuron/scene {
   neurons:
     [{neuron: neuron, stimulator_segments:
       [{segment: 100, stimulator: stimulator}]
-     }]
+     },
+     {neuron: neuron, stimulator_segments:
+      [{segment: 100, stimulator: stimulator}]
+     }
+    ]
 }
