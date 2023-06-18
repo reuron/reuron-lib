@@ -72,12 +72,14 @@ pub fn fetch_reconstructions(
 //  - The neuron file is determined by calling reuron-io's convert_swc endpoint.
 pub fn handle_reconstructions(
     allocator: std.mem.Allocator,
-    // client: *std.http.Client,
+    client: *std.http.Client,
     specimen_id: u64,
     reconstructions: PageOf(Reconstruction)
 ) ![]const u8 {
 
     const base_uri = "http://api.brain-map.org";
+    const reuron_convert_swc_str = "https://reuron.io/convert-swc?degree=200";
+    const reuron_convert_swc_path = std.Uri.parse(reuron_convert_swc_str) catch unreachable;
 
     const target_type : u64 = 303941301;
     var download_link: []const u8 = "";
@@ -98,17 +100,62 @@ pub fn handle_reconstructions(
         return "";
     }
 
-    const swc_remote_path = try std.fmt.allocPrint(
+    const swc_remote_path_str = try std.fmt.allocPrint(
         allocator,
         "{s}{s}",
         .{base_uri, download_link}
     );
+    const swc_remote_path = try std.Uri.parse(swc_remote_path_str);
 
     const ffg_path = try std.fmt.allocPrint(
         allocator,
         "./neurons/{}_{}.ffg",
         .{specimen_id, reconstruction_id}
     );
+
+    // var swc_req = try client.request(.GET, swc_remote_path, .{ .allocator = allocator }, .{});
+    // try swc_req.start();
+    // try swc_req.wait();
+    // const body = try swc_req.reader().readAllAlloc(allocator, 20000000);
+    // std.debug.print("swc body length: {}\n", .{body.len});
+
+    std.debug.print("Creating request to {s}\n", .{reuron_convert_swc_str});
+    var ffg_req = try client.request(
+        .POST,
+        reuron_convert_swc_path,
+        .{ .allocator = allocator },
+        .{.version = std.http.Version.@"HTTP/1.9"}
+    );
+
+    // ffg_req.transfer_encoding = .{ .content_length = body.len };
+    ffg_req.transfer_encoding = .{ .content_length = swc_remote_path_str.len };
+
+    // std.debug.print("body.len: {}\n", .{body.len});
+    std.debug.print("About to writeAll: {s}\n", .{swc_remote_path_str});
+
+    try ffg_req.writeAll(swc_remote_path_str);
+    // try ffg_req.writeAll(body);
+
+    // var written: usize = 0;
+    // while (written < body.len) {
+    //     const last_ind = std.math.min(written + 10000, body.len);
+    //     const n = try ffg_req.write(body[written..last_ind]);
+    //     written = written + n;
+    //     std.debug.print("Wrote {} bytes ({} total).\n", .{n, written});
+    // }
+    std.debug.print("About to finish\n", .{});
+    try ffg_req.finish();
+
+    std.debug.print("About to wait\n", .{});
+    try ffg_req.wait();
+    std.debug.print("About to readAllAlloc\n", .{});
+    const ffg_body = try ffg_req.reader().readAllAlloc(allocator, 1681086);
+
+    std.debug.print("ffg_req status: {}\n", .{ffg_req.response.status});
+
+    std.debug.print("ffg_body: {s}\n", .{ffg_body});
+
+    // const neuron_file =
 
     std.debug.print("Path hit: {s}\n", .{swc_remote_path});
     std.debug.print("ffg path: {s}\n", .{ffg_path});
@@ -129,10 +176,16 @@ pub fn main() !void {
 
     for (specimen_ids.msg) |msg| {
         if (fetch_reconstructions(allocator, &client, msg.specimen__id)) |reconstructions| {
+
             for (reconstructions.msg) |r| {
                 std.debug.print("id: {}\nn_files: {}\n\n", .{ r.id, r.well_known_files.len });
             }
-            const file = try handle_reconstructions(allocator, msg.specimen__id, reconstructions);
+            const file = try handle_reconstructions(
+                allocator,
+                &client,
+                msg.specimen__id,
+                reconstructions
+            );
 
             std.debug.print("handle_reconstruction result: {s}", .{file});
 
