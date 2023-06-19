@@ -1,3 +1,4 @@
+let neuron = https://raw.githubusercontent.com/reuron/reuron-lib/main/neurons/neuron_3.ffg
 let stimulator =
   Neuron/stimulator {
     envelope: {
@@ -14,7 +15,7 @@ let stimulator =
 Neuron/scene {
   neurons: [
 
-    { neuron: ./neurons/neuron_3.ffg
+    { neuron: neuron
     , stimulator_segments: [
         { segment: 100
         , stimulator: stimulator
