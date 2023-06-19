@@ -19,7 +19,7 @@
         };
         devShell = pkgs.mkShell {
           buildInputs = [
-            pkgs.zigpkgs.master
+            (pkgs.python3.withPackages (ps: [ps.requests]))
           ];
         };
 
