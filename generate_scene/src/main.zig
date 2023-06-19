@@ -35,7 +35,12 @@ pub fn fetch_specimens(
     try req.wait();
     const body = try req.reader().readAllAlloc(allocator, 2000000);
 
-    const specimens = try std.json.parseFromSlice(PageOf(SpecimenId), allocator, body, .{ .ignore_unknown_fields = true });
+    const specimens = try std.json.parseFromSlice(
+      PageOf(SpecimenId),
+      allocator,
+      body,
+      .{ .ignore_unknown_fields = true }
+    );
 
     return specimens;
 
@@ -61,7 +66,12 @@ pub fn fetch_reconstructions(
     try req.wait();
     const body = try req.reader().readAllAlloc(allocator, 2000000);
 
-    const reconstructions = std.json.parseFromSlice(PageOf(Reconstruction), allocator, body, .{ .ignore_unknown_fields = true });
+    const reconstructions = std.json.parseFromSlice(
+      PageOf(Reconstruction),
+      allocator,
+      body,
+      .{ .ignore_unknown_fields = true }
+    );
     std.debug.print("Fetched reconstructions for specimen {}", .{specimen_id});
     return reconstructions;
 
@@ -199,13 +209,6 @@ pub fn main() !void {
 
 }
 
-test "simple test" {
-    var list = std.ArrayList(i32).init(std.testing.allocator);
-    defer list.deinit(); // try commenting this out and see if zig detects the memory leak!
-    try list.append(42);
-    try std.testing.expectEqual(@as(i32, 42), list.pop());
-}
-
 test "parse specimen list" {
 
     const allocator = std.testing.allocator;
@@ -219,15 +222,22 @@ test "parse specimen list" {
         \\      "well_known_files": [
         \\        {
         \\          "id": 5678,
-        \\          "path": "/external/mousecelltypes/prod146/specimen_123/file.swc"
+        \\          "path": "/external/mousecelltypes/prod146/specimen_123/file.swc",
+        \\          "well_known_file_type_id": 1234,
+        \\          "download_link": "https://example.com/file.swc"
         \\        }
         \\      ]
         \\    }
         \\  ]
         \\}
     ;
-    const response = try std.json.parseFromSlice(PageOf(SpecimenId), allocator, response_json, .{});
-    defer std.json.parseFree(PageOf(SpecimenId), allocator, response);
+    const response = try std.json.parseFromSlice(
+      PageOf(Reconstruction),
+      allocator,
+      response_json,
+      .{ .ignore_unknown_fields = true }
+    );
+    defer std.json.parseFree(PageOf(Reconstruction), allocator, response);
 
     try std.testing.expect(response.success == true);
     try std.testing.expect(response.num_rows == 50);
@@ -235,7 +245,7 @@ test "parse specimen list" {
     try std.testing.expect(response.msg[0].well_known_files[0].path[0] == '/');
 }
 
-test "http" {
+test "allen_fetch" {
     const allocator : std.mem.Allocator = std.testing.allocator;
     var client: std.http.Client = .{ .allocator = allocator };
     defer client.deinit();
@@ -248,7 +258,29 @@ test "http" {
 
     const body = try req.reader().readAllAlloc(allocator, 2000000);
     defer allocator.free(body);
-    std.debug.print("body: {s}\n", .{body});
 
     try std.testing.expect(req.response.status == .ok);
+}
+
+test "reuron_echo" {
+    const allocator = std.testing.allocator;
+    var client: std.http.Client = .{ .allocator = allocator };
+    defer client.deinit();
+
+    // const echo_url = try std.Uri.parse("https://reuron.io/echo");
+    const echo_url = try std.Uri.parse("http://postman-echo.com/get?foo=bar");
+    var req = try client.request(.GET, echo_url, .{ .allocator = allocator }, .{});
+    try req.headers.append("Accept-Encoding", "identity");
+
+    // const message = "Hello!";
+    // req.transfer_encoding = .{ .content_length = message.len};
+
+    // std.debug.print("About to writeAll\n", .{});
+    // try req.writeAll(message);
+    // std.debug.print("About to finish\n", .{});
+    // try req.finish();
+
+    std.debug.print("About to wait\n", .{});
+    try req.wait();
+
 }
