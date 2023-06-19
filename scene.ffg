@@ -1,4 +1,3 @@
-let neuron = ./sample_neuron.ffg in
 let stimulator =
   Neuron/stimulator {
     envelope: {
