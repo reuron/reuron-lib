@@ -1,0 +1,32 @@
+let
+  prelude = https://raw.githubusercontent.com/reuron/reuron-io/main/prelude/package.ffg
+let
+  defaultSwcNeuron = https://raw.githubusercontent.com/reuron/reuron-lib/main/defaultSwcNeuron.ffg
+let
+  neuron = defaultSwcNeuron
+  [ {id: 1, x: 0.0, y: 0.0, z: 0.0, r: 5.0, type: 1, parent: -1}
+
+  , {id: 2, x: 0.0, y: -1.0, z: 0.0, r: 5.0, type: 2, parent: 1}
+  , {id: 3, x: -0.5, y: -2.0, z: 0.0, r: 5.0, type: 2, parent: 2}
+  , {id: 4, x: 0.5, y: -2.0, z: 0.0, r: 5.0, type: 2, parent: 2}
+
+  , {id: 5, x: -1.0, y: 0.0, z: 0.0, r: 5.0, type: 2, parent: 1}
+  , {id: 6, x: -2.0, y: -0.5, z: 0.0, r: 5.0, type: 2, parent: 5}
+  , {id: 7, x: -2.0, y: 0.5, z: 0.0, r: 5.0, type: 2, parent: 5}
+
+  , {id: 8, x: 1.0, y: 0.0, z: 0.0, r: 5.0, type: 2, parent: 1}
+  , {id: 9, x: 2.0, y: -0.5, z: 0.0, r: 5.0, type: 2, parent: 8}
+  , {id: 10, x: 2.0, y: 0.5, z: 0.0, r: 5.0, type: 2, parent: 8}
+
+  , {id: 11, x: 0.0, y: 1.0, z: 0.0, r: 5.0, type: 4, parent: 1}
+  , {id: 12, x: 0.0, y: 2.0, z: 0.0, r: 5.0, type: 4, parent: 11}
+  , {id: 13, x: 0.0, y: 3.0, z: 0.0, r: 5.0, type: 4, parent: 12}
+  , {id: 14, x: 0.0, y: 4.0, z: 0.0, r: 5.0, type: 4, parent: 13}
+
+  ]
+in
+  Neuron/scene {
+    neurons:
+      [ {neuron: neuron, location: {x_mm: 0.0, y_mm: 0.0, z_mm: 0.0}, stimulator_segments: []}],
+    synapses: []
+}
