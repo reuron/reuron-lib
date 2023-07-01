@@ -28,7 +28,7 @@ let
   mkNeuron = \row -> \column ->
     let
       stim1 = Neuron/stimulator {
-        envelope: { period_sec: 0.020, onset_sec: 0.0, offset_sec: 0.0010 },
+        envelope: { period_sec: 0.015, onset_sec: 0.0, offset_sec: 0.0010 },
         current_shape: SquareWave {
           on_current_uamps_per_square_cm: 200.0,
           off_current_uamps_per_square_cm: -2.0
@@ -37,15 +37,15 @@ let
     let
       stim2 = Neuron/stimulator {
         envelope:
-         let onset = 0.002 + (Integer/toReal column * 0.002)
+         let onset = 0.001 + (Integer/toReal column * 0.001)
          in
          {
-          period_sec: 0.020,
+          period_sec: 0.015,
           onset_sec: onset,
           offset_sec: onset + 0.001
           },
         current_shape: SquareWave {
-          on_current_uamps_per_square_cm: Integer/toReal (row + 1) * 200.1,
+          on_current_uamps_per_square_cm: (Integer/toReal row * 100.1) + 200.1,
           off_current_uamps_per_square_cm: -2.0
           }
         }
