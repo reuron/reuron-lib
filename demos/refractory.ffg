@@ -37,7 +37,7 @@ let
     let
       stim2 = Neuron/stimulator {
         envelope:
-         let onset = 0.002 + (Integer/toReal column * 0.001)
+         let onset = 0.002 + (Integer/toReal column * 0.002)
          in
          {
           period_sec: 0.020,
