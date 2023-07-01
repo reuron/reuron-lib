@@ -58,7 +58,6 @@ let
            location: {x_mm: x, y_mm: y, z_mm: 0.0},
            stimulator_segments:
              [{segment: 3, stimulator: stim1}
-             ,{segment: 4, stimulator: stim2}
              ]
          }
 
