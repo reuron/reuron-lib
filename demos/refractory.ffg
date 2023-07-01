@@ -24,9 +24,53 @@ let
   , {id: 14, x: 0.0, y: 400, z: 0.0, r: 0.5, type: 4, parent: 13}
 
   ]
+let
+  mkNeuron = \row -> \column ->
+    let
+      stim1 = Neuron/stimulator {
+        envelope: { period_sec: 0.05, onset_sec: 0.0, offset_sec: 0.0005 },
+        current_shape: SquareWave {
+          on_current_uamps_per_square_cm: 200.0,
+          off_current_uamps_per_square_cm: 1.0
+          }
+        }
+    let
+      stim2 = Neuron/stimulator {
+        envelope:
+         let onset = 0.005 -- (Integer/toReal row * 0.0005)
+         in
+         {
+          period_sec: 0.05,
+          onset_sec: onset,
+          offset_sec: onset + 0.0005
+          },
+        current_shape: SquareWave {
+          on_current_uamps_per_square_cm: 200.0,
+          off_current_uamps_per_square_cm: -1.0
+          }
+        }
+    let
+      x = Integer/toReal column * 0.1 -- 0.5
+    let
+      y = Integer/toReal row * 0.1 -- 0.5
+      in {
+           neuron: neuron,
+           location: {x_mm: x, y_mm: y, z_mm: 0.0},
+           stimulator_segments:
+             [{segment: 3, stimulator: stim1}
+             ,{segment: 4, stimulator: stim2}
+             ]
+         }
+
+
 in
   Neuron/scene {
     neurons:
-      [ {neuron: neuron, location: {x_mm: 0.0, y_mm: 0.0, z_mm: 0.0}, stimulator_segments: []}],
+      [ mkNeuron 0 0, mkNeuron 0 1, mkNeuron 0 2, mkNeuron 0 3, mkNeuron 0 4
+      , mkNeuron 1 0, mkNeuron 1 1, mkNeuron 1 2, mkNeuron 1 3, mkNeuron 1 4
+      , mkNeuron 2 0, mkNeuron 2 1, mkNeuron 2 2, mkNeuron 2 3, mkNeuron 2 4
+      , mkNeuron 3 0, mkNeuron 3 1, mkNeuron 3 2, mkNeuron 3 3, mkNeuron 3 4
+      , mkNeuron 4 0, mkNeuron 4 1, mkNeuron 4 2, mkNeuron 4 3, mkNeuron 4 4
+      ],
     synapses: []
 }
