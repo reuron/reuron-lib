@@ -28,7 +28,7 @@ let
   mkNeuron = \row -> \column ->
     let
       stim1 = Neuron/stimulator {
-        envelope: { period_sec: 0.010, onset_sec: 0.0, offset_sec: 0.0005 },
+        envelope: { period_sec: 0.010, onset_sec: 0.0, offset_sec: 0.0010 },
         current_shape: SquareWave {
           on_current_uamps_per_square_cm: 200.0,
           off_current_uamps_per_square_cm: -2.0
@@ -50,9 +50,9 @@ let
           }
         }
     let
-      x = Integer/toReal column * 1.1 -- 0.8
+      x = (Integer/toReal column * 1.1) -- 0.8
     let
-      y = Integer/toReal row * 1.1 -- 0.8
+      y = (Integer/toReal row * 1.1) -- 0.8
       in {
            neuron: neuron,
            location: {x_mm: x, y_mm: y, z_mm: 0.0},
