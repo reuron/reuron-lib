@@ -50,9 +50,9 @@ let
           }
         }
     let
-      x = (Integer/toReal column * 1.1) -- 0.8
+      x = (Integer/toReal column * 0.6) -- 0.8
     let
-      y = (Integer/toReal row * 1.1) -- 0.8
+      y = (Integer/toReal row * 0.7) -- 0.8
       in {
            neuron: neuron,
            location: {x_mm: x, y_mm: y, z_mm: 0.0},
