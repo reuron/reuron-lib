@@ -38,7 +38,7 @@ let
     let
       stim2 = Neuron/stimulator {
         envelope:
-         let onset = 0.0005 + (Integer/toReal column * 0.0005)
+         let onset = 0.0005 + (Integer/toReal column * 0.0010)
          in
          {
           period_sec: 0.020,
@@ -51,7 +51,7 @@ let
           }
         }
     let
-      x = (Integer/toReal column * 0.6) -- 1.8
+      x = (Integer/toReal column * 0.6) -- 2.2
     let
       y = (Integer/toReal row * 0.7) -- 0.1
       in {
@@ -68,7 +68,7 @@ in
   Neuron/scene {
     neurons:
       [ mkNeuron 0 0, mkNeuron 0 1, mkNeuron 0 2, mkNeuron 0 3, mkNeuron 0 4, mkNeuron 0 5
-      , mkNeuron 0 6, mkNeuron 0 7, mkNeuron 0 8, mkNeuron 0 9, mkNeuron 0 10, mkNeuron 0 11
+      , mkNeuron 0 6, mkNeuron 0 7, mkNeuron 0 8, mkNeuron 0 9, mkNeuron 0 10
       ],
     synapses: []
 }
