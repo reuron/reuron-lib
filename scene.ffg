@@ -16,6 +16,16 @@ Neuron/scene {
   neurons: [
 
     { neuron: neuron
+    , location: { x_mm: 0.5, y_mm: 0.5, z_mm: 0.5 }
+    , stimulator_segments: [
+        { segment: 100
+        , stimulator: stimulator
+        }
+      ]
+    },
+
+    { neuron: neuron
+    , location: { x_mm: 0.0, y_mm: 0.0, z_mm: 0.0 }
     , stimulator_segments: [
         { segment: 100
         , stimulator: stimulator
@@ -23,5 +33,6 @@ Neuron/scene {
       ]
     }
 
-  ]
+  ],
+  synapses: []
 }
