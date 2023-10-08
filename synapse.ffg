@@ -19,7 +19,7 @@ let
 let
   ampa_receptor = {
     membrane_channel: {
-      channel: Neuron/channel {
+      channel: Channel {
         ion_selectivity: { k: 0.5, na: 0.5, cl: 0.0, ca: 0.0 },
         activation: null,
         inactivation: null
@@ -36,7 +36,7 @@ let
 in
 
 [
-  Neuron/synapse {
+  Synapse {
      pre_neuron: 0,
      pre_segment: 37,
      post_neuron: 1,
@@ -49,7 +49,7 @@ in
        transmitter_concentrations: { glutamate_molar: 0.1e-3, gaba_molar: 0.1e-3 }
      }
   },
-  Neuron/synapse {
+  Synapse {
      pre_neuron: 0,
      pre_segment: 37,
      post_neuron: 1,

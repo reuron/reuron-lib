@@ -1,7 +1,7 @@
 let membranes = ./membranes.ffg
 in
 
-\segments -> Neuron/neuron
+\segments -> Neuron
   { segments: segments,
      membranes:
        [ membranes.pyramidal_cell.soma,
