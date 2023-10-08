@@ -1,7 +1,7 @@
 let
   prelude = https://raw.githubusercontent.com/reuron/reuron-io/main/prelude/package.ffg
 let
-  defaultSwcNeuron = https://raw.githubusercontent.com/reuron/reuron-lib/main/defaultSwcNeuron.ffg
+  defaultSwcNeuron = https://raw.githubusercontent.com/reuron/reuron-lib/cleanup-syntax/defaultSwcNeuron.ffg
 let
   neuron = defaultSwcNeuron
   [ {id: 1, x: 0.0, y: 0.0, z: 0.0, r: 0.5, type: 1, parent: -1}

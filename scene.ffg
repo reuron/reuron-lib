@@ -29,6 +29,11 @@ Scene {
     { neuron: neuron
     , location: { x_mm: 0.0, y_mm: 0.0, z_mm: 0.0 }
     , stimulator_segments: []
+    },
+
+    { neuron: neuron
+    , location: { x_mm: 0.2, y_mm: 0.2, z_mm: 0.2 }
+    , stimulator_segments: []
     }
 
   ],
