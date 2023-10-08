@@ -45,7 +45,7 @@ in
        }
      },
 
-     leak: Cchannel {
+     leak: Channel {
        ion_selectivity: { k: 0.0, na: 0.0, cl: 1.0, ca: 0.0 },
        activation: null,
        inactivation: null,
