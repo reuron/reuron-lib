@@ -28,7 +28,7 @@ let
 let
   mkNeuron = \row -> \column ->
     let
-      stim1 = Neuron/stimulator {
+      stim1 = Stimulator {
         envelope: { period_sec: 0.020, onset_sec: 0.0, offset_sec: 0.0010 },
         current_shape: SquareWave {
           on_current_uamps_per_square_cm: 200.0,
@@ -36,7 +36,7 @@ let
           }
         }
     let
-      stim2 = Neuron/stimulator {
+      stim2 = Stimulator {
         envelope:
          let onset = 0.0005 + (Integer/toReal column * 0.0010)
          in
@@ -65,7 +65,7 @@ let
 
 
 in
-  Neuron/scene {
+  Scene {
     neurons:
       [ mkNeuron 0 0, mkNeuron 0 1, mkNeuron 0 2, mkNeuron 0 3, mkNeuron 0 4, mkNeuron 0 5
       , mkNeuron 0 6, mkNeuron 0 7, mkNeuron 0 8, mkNeuron 0 9, mkNeuron 0 10

@@ -6,7 +6,7 @@ in
 {
 
   giant_squid: {
-     k: Neuron/channel {
+     k: Channel {
        ion_selectivity: only_k,
        activation: {
          gates: 4,
@@ -21,7 +21,7 @@ in
        inactivation: null,
      },
 
-     na: Neuron/channel {
+     na: Channel {
        ion_selectivity: only_na,
        activation: {
          gates: 3,
@@ -45,7 +45,7 @@ in
        }
      },
 
-     leak: Neuron/channel {
+     leak: Channel {
        ion_selectivity: { k: 0.0, na: 0.0, cl: 1.0, ca: 0.0 },
        activation: null,
        inactivation: null,
@@ -54,7 +54,7 @@ in
 
   rat_thalamocortical: {
 
-    na_transient: Neuron/channel {
+    na_transient: Channel {
       ion_selectivity: only_na,
       activation: {
         gates: 1,
@@ -71,7 +71,7 @@ in
         }
       }
     },
-    k_slow: Neuron/channel {
+    k_slow: Channel {
       ion_selectivity: only_k,
       activation: {
         gates: 1,
@@ -97,7 +97,7 @@ in
   },
 
   rat_ca1_pyramidal: {
-    hcn_soma: Neuron/channel {
+    hcn_soma: Channel {
       ion_selectivity: { na: 0.35, k: 0.65, cl: 0.0, ca: 0.0 },
       activation: null,
       inactivation: {
@@ -111,7 +111,7 @@ in
         } 
       }
     },
-    hcn_dendrite: Neuron/channel {
+    hcn_dendrite: Channel {
       ion_selectivity: { na: 0.55, k: 0.45, cl: 0.0, ca: 0.0 },
       activation: null,
       inactivation: {

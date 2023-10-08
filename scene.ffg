@@ -2,7 +2,7 @@ let neuron = ./neurons/neuron_3.ffg
 let synapses = ./synapse.ffg
 in
 let stimulator =
-  Neuron/stimulator {
+  Stimulator {
     envelope: {
       period_sec: 0.1,
       onset_sec: 0.0,
@@ -14,7 +14,7 @@ let stimulator =
     }
   } in
 
-Neuron/scene {
+Scene {
   neurons: [
 
     { neuron: neuron

@@ -8,7 +8,7 @@ in {
 
   pyramidal_cell: {
 
-    apical_dendrite: Neuron/membrane {
+    apical_dendrite: Membrane {
       capacitance_farads_per_square_cm: 2.0e-6,
       membrane_channels: [
         { channel: na_transient , siemens_per_square_cm: 0.023 },
@@ -18,7 +18,7 @@ in {
       ]
     },
 
-    basal_dendrite: Neuron/membrane {
+    basal_dendrite: Membrane {
       capacitance_farads_per_square_cm: 2.0e-6,
       membrane_channels: [
         { channel: leak , siemens_per_square_cm: 0.03e-3 },
@@ -26,7 +26,7 @@ in {
       ]
     },
 
-    axon_initial_segment: Neuron/membrane {
+    axon_initial_segment: Membrane {
       capacitance_farads_per_square_cm: 1.0e-6,
       membrane_channels: [
         { channel: na_transient , siemens_per_square_cm: 120.0e-3 },
@@ -35,7 +35,7 @@ in {
       ]
     },
 
-    axon: Neuron/membrane {
+    axon: Membrane {
       capacitance_farads_per_square_cm: 1.0e-6,
       membrane_channels: [
         { channel: na_transient , siemens_per_square_cm: 120.0e-3 },
@@ -44,7 +44,7 @@ in {
       ]
     },
 
-    soma: Neuron/membrane {
+    soma: Membrane {
       capacitance_farads_per_square_cm: 1.0e-6,
       membrane_channels: [
         { channel: k_slow, siemens_per_square_cm: 36.0e-3 },
